@@ -11,9 +11,10 @@ import io.grpc.stub.StreamObserver;
 public class PasswordServiceImpl extends PasswordServiceGrpc.PasswordServiceImplBase {
 
     /**
-     *  This method is used to generate a response to send back to the client.
+     *  This method is used to hash the password sent by the client and generate a response to send back.
      *  HashRequest request = The request sent.
-     *  StreamObserver<HashResponse> responseObserver = Is a special interface for the server to call with its response.
+     *  StreamObserver<HashResponse> responseObserver = Returns a HashResponse generated in the proto file
+     *  (int32 userId, bytes hashedPassword & bytes salt).
      *
      * @param request
      * @param responseObserver
@@ -37,7 +38,7 @@ public class PasswordServiceImpl extends PasswordServiceGrpc.PasswordServiceImpl
             ByteString bsSalt = ByteString.copyFrom(salt);
             ByteString bsHashedPassword = ByteString.copyFrom(hashedPassword);
 
-            // We use the responseObserver’s onNext() method to return the HashRequest,
+            // Use the responseObserver’s onNext() method to return the HashRequest,
             // while populating it with the userId, salt, and hashedPassword.
             responseObserver.onNext(HashResponse.newBuilder()
                     .setUserId(request.getUserId())
@@ -54,11 +55,24 @@ public class PasswordServiceImpl extends PasswordServiceGrpc.PasswordServiceImpl
     }
 
     /**
+     * This method is used to validate if the password sent by the client matches.
+     * HashRequest request = The request sent.
+     * StreamObserver<BoolValue> responseObserver = returns a bool value depending if the password matches or not.
+     *
      * @param request
      * @param responseObserver
      */
     @Override
     public void validate(ValidateRequest request, StreamObserver<BoolValue> responseObserver) {
-        super.validate(request, responseObserver);
+
+        //request.getSalt();
+        // Take in password from request (Sent from client).
+//        char[] password = request.getPassword().toCharArray();
+//
+//        // Get a random salt from Passwords class.
+//        byte[] salt = Passwords.getNextSalt();
+//
+//        // Hash the password using the new salt.
+//        byte[] hashedPassword = Ha
     }
 }
