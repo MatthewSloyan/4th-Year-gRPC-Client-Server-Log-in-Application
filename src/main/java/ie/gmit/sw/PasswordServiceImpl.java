@@ -19,7 +19,22 @@ public class PasswordServiceImpl extends PasswordServiceGrpc.PasswordServiceImpl
      */
     @Override
     public void hash(HashRequest request, StreamObserver<HashResponse> responseObserver) {
-        super.hash(request, responseObserver);
+
+        try {
+            // Take in password from request (Sent from client).
+            char[] password = request.getPassword().toCharArray();
+
+            // Get a random salt from Passwords class.
+            byte[] salt = Passwords.getNextSalt();
+
+            // Hash the password using the new salt.
+            byte[] hashedPassword = Passwords.hash(password, salt);
+
+        } catch (RuntimeException ex) {
+            responseObserver.onNext(HashResponse.newBuilder().getDefaultInstanceForType());
+        }
+        responseObserver.onCompleted();
+
     }
 
     /**
