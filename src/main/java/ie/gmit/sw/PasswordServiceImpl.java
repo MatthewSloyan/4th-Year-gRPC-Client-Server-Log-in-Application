@@ -65,14 +65,26 @@ public class PasswordServiceImpl extends PasswordServiceGrpc.PasswordServiceImpl
     @Override
     public void validate(ValidateRequest request, StreamObserver<BoolValue> responseObserver) {
 
-        //request.getSalt();
-        // Take in password from request (Sent from client).
-//        char[] password = request.getPassword().toCharArray();
-//
-//        // Get a random salt from Passwords class.
-//        byte[] salt = Passwords.getNextSalt();
-//
-//        // Hash the password using the new salt.
-//        byte[] hashedPassword = Ha
+        try {
+            // As request.getSalt & getHashedPassword return ByteStrings
+            ByteString bsSalt = request.getSalt();
+            ByteString bsHashedPassword = request.getHashedPassword();
+
+            // However Passwords.isExpectedPassword requires byte arrays so convert byteStrings above.
+            byte[] salt = bsSalt.toByteArray();
+            byte[] hashedPassword = bsHashedPassword.toByteArray();
+
+            // Check if actual password matches the salt and hashed password (return true). Else return false.
+            if (Passwords.isExpectedPassword(request.getPassword().toCharArray(), salt, hashedPassword)){
+                responseObserver.onNext(BoolValue.newBuilder().setValue(true).build());
+            }
+            else {
+                responseObserver.onNext(BoolValue.newBuilder().setValue(false).build());
+            }
+
+        } catch (RuntimeException ex) {
+            // Send back false if error.
+            responseObserver.onNext(BoolValue.newBuilder().setValue(false).build());
+        }
     }
 }
