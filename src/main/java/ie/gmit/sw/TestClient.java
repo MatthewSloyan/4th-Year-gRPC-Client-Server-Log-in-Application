@@ -1,12 +1,16 @@
 package ie.gmit.sw;
 
+import com.google.protobuf.BoolValue;
 import com.google.protobuf.ByteString;
 import ie.gmit.ds.HashRequest;
 import ie.gmit.ds.HashResponse;
 import ie.gmit.ds.PasswordServiceGrpc;
+import ie.gmit.ds.ValidateRequest;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
+import io.grpc.Status;
 import io.grpc.StatusRuntimeException;
+import io.grpc.stub.StreamObserver;
 
 import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
@@ -21,8 +25,9 @@ public class TestClient {
     private final PasswordServiceGrpc.PasswordServiceStub asyncPasswordService;
     private final PasswordServiceGrpc.PasswordServiceBlockingStub syncPasswordService;
 
-    public ByteString hashedTestPassword;
-    public ByteString saltTest;
+    private String testPassword;
+    private ByteString hashedTestPassword;
+    private ByteString saltTest;
 
     public TestClient(String host, int port) {
         channel = ManagedChannelBuilder
@@ -37,7 +42,7 @@ public class TestClient {
         channel.shutdown().awaitTermination(5, TimeUnit.SECONDS);
     }
 
-    public void hashPassword(HashRequest hashRequest) {
+    private void hashPassword(HashRequest hashRequest) {
         logger.info("Hashing password");
 
         HashResponse result = HashResponse.newBuilder().getDefaultInstanceForType();
@@ -58,6 +63,48 @@ public class TestClient {
         }
     }
 
+    private void validatePassword() {
+        StreamObserver<BoolValue> responseObserver = new StreamObserver<BoolValue>() {
+            @Override
+            public void onNext(BoolValue value) {
+                logger.info("Validation!");
+                if(value.getValue()){
+                    logger.info("Successful match!");
+                }
+                else {
+                    logger.info("Unsuccessful match!");
+                }
+            }
+
+            @Override
+            public void onError(Throwable throwable) {
+                Status status = Status.fromThrowable(throwable);
+
+                logger.log(Level.WARNING, "RPC Error: {0}", status);
+            }
+
+            @Override
+            public void onCompleted() {
+                logger.info("Finished");
+                // End program
+                System.exit(0);
+            }
+        };
+
+        try {
+            asyncPasswordService.validate(ValidateRequest.newBuilder()
+                    .setPassword(testPassword)
+                    .setHashedPassword(hashedTestPassword)
+                    .setSalt(saltTest)
+                    .build(), responseObserver);
+            logger.info("Validation returned ");
+        } catch (
+                StatusRuntimeException ex) {
+            logger.log(Level.WARNING, "RPC failed: {0}", ex.getStatus());
+            return;
+        }
+    }
+
     public static void main(String[] args) throws Exception {
         TestClient client = new TestClient("localhost", 50551);
 
@@ -69,6 +116,9 @@ public class TestClient {
         System.out.println("Please enter a password: ");
         String userPassword = console.next();
 
+        System.out.println("Please enter a test password: ");
+        client.testPassword = console.next();
+
         // Build a hashRequest object
         HashRequest hashRequest = HashRequest.newBuilder()
                 .setUserId(userId)
@@ -76,7 +126,7 @@ public class TestClient {
                 .build();
         try {
             client.hashPassword(hashRequest); // synchronous
-            //client.validatePassword(); // asynchronous
+            client.validatePassword(); // asynchronous
         } finally {
             // Don't stop process, keep alive to receive async response
             Thread.currentThread().join();
