@@ -1,5 +1,6 @@
 package ie.gmit.sw;
 
+import com.google.protobuf.ByteString;
 import ie.gmit.ds.HashRequest;
 import ie.gmit.ds.HashResponse;
 import ie.gmit.ds.PasswordServiceGrpc;
@@ -14,11 +15,14 @@ import java.util.logging.Logger;
 
 public class TestClient {
 
-    // Initialize clients and
+    // Initialize logger, channel and sync/async services.
     private static final Logger logger = Logger.getLogger(TestClient.class.getName());
     private final ManagedChannel channel;
     private final PasswordServiceGrpc.PasswordServiceStub asyncPasswordService;
     private final PasswordServiceGrpc.PasswordServiceBlockingStub syncPasswordService;
+
+    public ByteString hashedTestPassword;
+    public ByteString saltTest;
 
     public TestClient(String host, int port) {
         channel = ManagedChannelBuilder
@@ -39,6 +43,10 @@ public class TestClient {
         HashResponse result = HashResponse.newBuilder().getDefaultInstanceForType();
         try {
             result = syncPasswordService.hash(hashRequest);
+
+            // Save results to local variables for testing
+            hashedTestPassword = result.getHashedPassword();
+            saltTest = result.getSalt();
         } catch (StatusRuntimeException ex) {
             logger.log(Level.WARNING, "RPC failed: {0}", ex.getStatus());
             return;
