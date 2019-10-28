@@ -38,6 +38,11 @@ public class PasswordServiceImpl extends PasswordServiceGrpc.PasswordServiceImpl
             ByteString bsSalt = ByteString.copyFrom(salt);
             ByteString bsHashedPassword = ByteString.copyFrom(hashedPassword);
 
+            System.out.println();
+            System.out.println("S: " + bsSalt);
+            System.out.println("HP: " + bsHashedPassword);
+            System.out.println();
+
             // Use the responseObserver’s onNext() method to return the HashRequest,
             // while populating it with the userId, salt, and hashedPassword.
             responseObserver.onNext(HashResponse.newBuilder()

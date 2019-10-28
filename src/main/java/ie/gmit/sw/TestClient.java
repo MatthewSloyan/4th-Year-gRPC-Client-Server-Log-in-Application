@@ -26,6 +26,7 @@ public class TestClient {
     private final PasswordServiceGrpc.PasswordServiceBlockingStub syncPasswordService;
 
     private String testPassword;
+    private int testUserId = 1;
     private ByteString hashedTestPassword;
     private ByteString saltTest;
 
@@ -42,7 +43,7 @@ public class TestClient {
         channel.shutdown().awaitTermination(5, TimeUnit.SECONDS);
     }
 
-    private void hashPassword(HashRequest hashRequest) {
+    /*private void hashPassword(HashRequest hashRequest) {
         logger.info("Hashing password");
 
         HashResponse result = HashResponse.newBuilder().getDefaultInstanceForType();
@@ -60,6 +61,46 @@ public class TestClient {
             logger.info("Successful");
         } else {
             logger.warning("Failed to hash password");
+        }
+    }*/
+
+    private void hashPassword(HashRequest hashRequest) {
+        logger.info("Hashing password");
+
+        StreamObserver<HashResponse> responseObserver = new StreamObserver<HashResponse>() {
+            @Override
+            public void onNext(HashResponse value) {
+                // Save results to local variables for testing
+                testUserId = value.getUserId();
+                hashedTestPassword = value.getHashedPassword();
+                saltTest = value.getSalt();
+            }
+
+            @Override
+            public void onError(Throwable throwable) {
+                Status status = Status.fromThrowable(throwable);
+
+                logger.log(Level.WARNING, "RPC Error: {0}", status);
+            }
+
+            @Override
+            public void onCompleted() {
+                logger.info("Finished");
+                // End program
+                System.exit(0);
+            }
+        };
+
+        try {
+            asyncPasswordService.hash(HashRequest.newBuilder()
+                    .setUserId(hashRequest.getUserId())
+                    .setPassword(hashRequest.getPassword())
+                    .build(), responseObserver);
+            logger.info("Validation returned ");
+        } catch (
+                StatusRuntimeException ex) {
+            logger.log(Level.WARNING, "RPC failed: {0}", ex.getStatus());
+            return;
         }
     }
 
