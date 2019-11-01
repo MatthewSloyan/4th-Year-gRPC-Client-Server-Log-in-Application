@@ -12,9 +12,9 @@ public class PasswordServiceImpl extends PasswordServiceGrpc.PasswordServiceImpl
 
     /**
      *  This method is used to hash the password sent by the client and generate a response to send back.
-     *  HashRequest request = The request sent.
-     *  StreamObserver<HashResponse> responseObserver = Returns a HashResponse generated in the proto file
-     *  (int32 userId, bytes hashedPassword & bytes salt).
+     *  HashRequest request = The request sent which inclues a int32 userId and String password.
+     *  StreamObserver<HashResponse> responseObserver = Returns a HashResponse generated in the proto file which includes a
+     *  int32 userId, bytes hashedPassword & bytes salt.
      *
      * @param request
      * @param responseObserver
@@ -38,11 +38,6 @@ public class PasswordServiceImpl extends PasswordServiceGrpc.PasswordServiceImpl
             ByteString bsSalt = ByteString.copyFrom(salt);
             ByteString bsHashedPassword = ByteString.copyFrom(hashedPassword);
 
-            System.out.println();
-            System.out.println("S: " + bsSalt);
-            System.out.println("HP: " + bsHashedPassword);
-            System.out.println();
-
             // Use the responseObserver’s onNext() method to return the HashRequest,
             // while populating it with the userId, salt, and hashedPassword.
             responseObserver.onNext(HashResponse.newBuilder()
@@ -61,8 +56,9 @@ public class PasswordServiceImpl extends PasswordServiceGrpc.PasswordServiceImpl
 
     /**
      * This method is used to validate if the password sent by the client matches.
-     * HashRequest request = The request sent.
+     * ValidateRequest request = The request sent. Includes password as a string, and hashedpassword/salt as a ByteString
      * StreamObserver<BoolValue> responseObserver = returns a bool value depending if the password matches or not.
+     * Using the Passwords class which checks if the Byte array of the password and salt matches the user password input .
      *
      * @param request
      * @param responseObserver
@@ -79,17 +75,23 @@ public class PasswordServiceImpl extends PasswordServiceGrpc.PasswordServiceImpl
             byte[] salt = bsSalt.toByteArray();
             byte[] hashedPassword = bsHashedPassword.toByteArray();
 
-            // Check if actual password matches the salt and hashed password (return true). Else return false.
+            // Check if actual password matches the salt and hashed password (return true). Else return false to the client.
             if (Passwords.isExpectedPassword(request.getPassword().toCharArray(), salt, hashedPassword)){
+                System.out.println("Validation Successful");
+
+                // Send back the bool value as true to the client.
                 responseObserver.onNext(BoolValue.newBuilder().setValue(true).build());
             }
             else {
+                System.out.println("Validation Failed!");
                 responseObserver.onNext(BoolValue.newBuilder().setValue(false).build());
             }
 
         } catch (RuntimeException ex) {
-            // Send back false if error.
+            // Send back false if error. This will be handled in the client.
             responseObserver.onNext(BoolValue.newBuilder().setValue(false).build());
         }
+
+        responseObserver.onCompleted();
     }
 }

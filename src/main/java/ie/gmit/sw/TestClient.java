@@ -43,27 +43,6 @@ public class TestClient {
         channel.shutdown().awaitTermination(5, TimeUnit.SECONDS);
     }
 
-    /*private void hashPassword(HashRequest hashRequest) {
-        logger.info("Hashing password");
-
-        HashResponse result = HashResponse.newBuilder().getDefaultInstanceForType();
-        try {
-            result = syncPasswordService.hash(hashRequest);
-
-            // Save results to local variables for testing
-            hashedTestPassword = result.getHashedPassword();
-            saltTest = result.getSalt();
-        } catch (StatusRuntimeException ex) {
-            logger.log(Level.WARNING, "RPC failed: {0}", ex.getStatus());
-            return;
-        }
-        if (result.getHashedPassword() != null) {
-            logger.info("Successful");
-        } else {
-            logger.warning("Failed to hash password");
-        }
-    }*/
-
     private void hashPassword(HashRequest hashRequest) {
         logger.info("Hashing password");
 
@@ -87,7 +66,7 @@ public class TestClient {
             public void onCompleted() {
                 logger.info("Finished");
                 // End program
-                System.exit(0);
+                //System.exit(0);
             }
         };
 
@@ -96,51 +75,37 @@ public class TestClient {
                     .setUserId(hashRequest.getUserId())
                     .setPassword(hashRequest.getPassword())
                     .build(), responseObserver);
-            logger.info("Validation returned ");
+            logger.info("Password hashing sent!");
+            TimeUnit.SECONDS.sleep(2);
         } catch (
-                StatusRuntimeException ex) {
-            logger.log(Level.WARNING, "RPC failed: {0}", ex.getStatus());
+                StatusRuntimeException | InterruptedException ex) {
+            logger.log(Level.WARNING, "RPC failed: {0}", ex.fillInStackTrace());
             return;
         }
     }
 
     private void validatePassword() {
-        StreamObserver<BoolValue> responseObserver = new StreamObserver<BoolValue>() {
-            @Override
-            public void onNext(BoolValue value) {
-                logger.info("Validation!");
-                if(value.getValue()){
-                    logger.info("Successful match!");
-                }
-                else {
-                    logger.info("Unsuccessful match!");
-                }
-            }
+        logger.info("Validation!");
 
-            @Override
-            public void onError(Throwable throwable) {
-                Status status = Status.fromThrowable(throwable);
-
-                logger.log(Level.WARNING, "RPC Error: {0}", status);
-            }
-
-            @Override
-            public void onCompleted() {
-                logger.info("Finished");
-                // End program
-                System.exit(0);
-            }
-        };
+        BoolValue result = BoolValue.newBuilder().setValue(false).build();
+        logger.info(result.toString() + "Test");
 
         try {
-            asyncPasswordService.validate(ValidateRequest.newBuilder()
+            result = syncPasswordService.validate(ValidateRequest.newBuilder()
                     .setPassword(testPassword)
                     .setHashedPassword(hashedTestPassword)
                     .setSalt(saltTest)
-                    .build(), responseObserver);
-            logger.info("Validation returned ");
-        } catch (
-                StatusRuntimeException ex) {
+                    .build());
+
+            logger.info(result.toString());
+
+            if(result.getValue()){
+                logger.info("Successful match!");
+            }
+            else {
+                logger.info("Unsuccessful match!");
+            }
+        } catch (StatusRuntimeException ex) {
             logger.log(Level.WARNING, "RPC failed: {0}", ex.getStatus());
             return;
         }
@@ -166,8 +131,8 @@ public class TestClient {
                 .setPassword(userPassword)
                 .build();
         try {
-            client.hashPassword(hashRequest); // synchronous
-            client.validatePassword(); // asynchronous
+            client.hashPassword(hashRequest); // asynchronous
+            client.validatePassword(); // synchronous
         } finally {
             // Don't stop process, keep alive to receive async response
             Thread.currentThread().join();
