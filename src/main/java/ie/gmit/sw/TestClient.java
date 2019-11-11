@@ -112,30 +112,93 @@ public class TestClient {
     }
 
     public static void main(String[] args) throws Exception {
-        TestClient client = new TestClient("localhost", 50551);
 
         Scanner console = new Scanner(System.in);
 
-        System.out.println("Please enter a userID: ");
-        int userId = console.nextInt();
+        int port = 0;
+        String menuInput = "";
+        int userId;
+        String userPassword;
+        String userEmail;
+        boolean valid = true;
+        boolean keepRunning = true;
 
-        System.out.println("Please enter a password: ");
-        String userPassword = console.next();
+        // Keep looping until a valid input is entered E.g correct port number
+        while (valid){
+            try {
+                System.out.println("Please enter a port to run server on: ");
+                port = console.nextInt();
 
-        System.out.println("Please enter a test password: ");
-        client.testPassword = console.next();
-
-        // Build a hashRequest object
-        HashRequest hashRequest = HashRequest.newBuilder()
-                .setUserId(userId)
-                .setPassword(userPassword)
-                .build();
-        try {
-            client.hashPassword(hashRequest); // asynchronous
-            client.validatePassword(); // synchronous
-        } finally {
-            // Don't stop process, keep alive to receive async response
-            Thread.currentThread().join();
+                // Check if port number is in the valid range.
+                if(port >= 1024 && port <= 65535){
+                    valid = false;
+                }
+                else {
+                    System.out.print("Invalid Port number (Must be in the range of 1024 to 65535).");
+                }
+            }
+            catch (RuntimeException e){
+                System.out.println("Invalid input, please try again.");
+            }
         }
+
+        TestClient client = new TestClient("localhost", port);
+        valid = true;
+
+        while(keepRunning) {
+            System.out.println("======= USER SERVICE =======");
+
+            do {
+                System.out.println("Please select an option:\n (1) Create user\n (2) Get user\n " +
+                        "(3) List all users\n (4) Login\n (5) Exit Program");
+                menuInput = console.nextLine();
+
+                // Check if input is correct.
+                if(Integer.parseInt(menuInput) >= 1 && Integer.parseInt(menuInput) <= 5){
+                    valid = false;
+                }
+                else {
+                    System.out.println("Invalid input please try again.");
+                }
+            } while (valid);
+
+            switch (Integer.parseInt(menuInput))
+            {
+                case 1:
+                    System.out.println("Please enter a userID: ");
+                    userId = console.nextInt();
+
+                    System.out.println("Please enter a password: ");
+                    userPassword = console.next();
+
+                    // Build a hashRequest object
+                    HashRequest hashRequest = HashRequest.newBuilder()
+                            .setUserId(userId)
+                            .setPassword(userPassword)
+                            .build();
+                    try {
+                        client.hashPassword(hashRequest); // asynchronous
+                        client.validatePassword(); // synchronous
+                    } finally {
+                        // Don't stop process, keep alive to receive async response
+                        Thread.currentThread().join();
+                    }
+                    break;
+                case 2:
+                    break;
+                case 3:
+                    break;
+                case 4:
+                    break;
+                default:
+                    keepRunning = false;
+            } // menu selection switch
+        }
+
+        //System.out.println("Please enter a test password: ");
+        //client.testPassword = console.next();
+
+        // Start client once valid.
+        //new TestClient("localhost", port).display();
     }
 }
