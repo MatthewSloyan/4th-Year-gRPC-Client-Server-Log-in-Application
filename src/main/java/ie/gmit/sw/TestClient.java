@@ -117,9 +117,10 @@ public class TestClient {
 
         int port = 0;
         String menuInput = "";
-        int userId;
-        String userPassword;
+        int userId = 0;
+        String userName;
         String userEmail;
+        String userPassword;
         boolean valid = true;
         boolean keepRunning = true;
 
@@ -143,56 +144,64 @@ public class TestClient {
         }
 
         TestClient client = new TestClient("localhost", port);
-        valid = true;
 
         while(keepRunning) {
             System.out.println("======= USER SERVICE =======");
 
-            do {
-                System.out.println("Please select an option:\n (1) Create user\n (2) Get user\n " +
-                        "(3) List all users\n (4) Login\n (5) Exit Program");
-                menuInput = console.nextLine();
+            System.out.println("Please select an option:\n (1) Create user\n (2) Get user\n " +
+                    "(3) List all users\n (4) Login\n (5) Exit Program");
+            menuInput = console.next();
 
-                // Check if input is correct.
-                if(Integer.parseInt(menuInput) >= 1 && Integer.parseInt(menuInput) <= 5){
-                    valid = false;
-                }
-                else {
-                    System.out.println("Invalid input please try again.");
-                }
-            } while (valid);
+            try {
+                switch (Integer.parseInt(menuInput))
+                {
+                    case 1:
+                        // Create a user
+                        System.out.println("Please enter a user name: ");
+                        userName = console.next();
 
-            switch (Integer.parseInt(menuInput))
-            {
-                case 1:
-                    System.out.println("Please enter a userID: ");
-                    userId = console.nextInt();
+                        System.out.println("Please enter a email address: ");
+                        userEmail = console.next();
 
-                    System.out.println("Please enter a password: ");
-                    userPassword = console.next();
+                        System.out.println("Please enter a password: ");
+                        userPassword = console.next();
 
-                    // Build a hashRequest object
-                    HashRequest hashRequest = HashRequest.newBuilder()
-                            .setUserId(userId)
-                            .setPassword(userPassword)
-                            .build();
-                    try {
-                        client.hashPassword(hashRequest); // asynchronous
-                        client.validatePassword(); // synchronous
-                    } finally {
-                        // Don't stop process, keep alive to receive async response
-                        Thread.currentThread().join();
-                    }
-                    break;
-                case 2:
-                    break;
-                case 3:
-                    break;
-                case 4:
-                    break;
-                default:
-                    keepRunning = false;
-            } // menu selection switch
+                        // Build a hashRequest object
+                        HashRequest hashRequest = HashRequest.newBuilder()
+                                .setUserId(userId)
+                                .setPassword(userPassword)
+                                .build();
+                        try {
+                            client.hashPassword(hashRequest); // asynchronous
+                        }catch (RuntimeException e) {
+                            e.getMessage();
+                        }
+                        break;
+                    case 2:
+                        // Get specific user
+                        System.out.println("Please enter a userID: ");
+                        userId = console.nextInt();
+                        break;
+                    case 3:
+                        // List all users
+                        break;
+                    case 4:
+                        // Login
+//                    System.out.println("Please enter a userID: ");
+//                    userId = console.nextInt();
+//
+//                    System.out.println("Please enter a password: ");
+//                    userPassword = console.next();
+//
+//                    client.validatePassword(); // synchronous
+                        break;
+                    default:
+                        keepRunning = false;
+                } // menu selection switch
+            }
+            catch (RuntimeException e){
+                System.out.println("Invalid input, please try again.\n");
+            }
         }
 
         //System.out.println("Please enter a test password: ");
