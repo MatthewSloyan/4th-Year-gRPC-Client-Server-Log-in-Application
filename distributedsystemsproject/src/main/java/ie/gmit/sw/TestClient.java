@@ -79,8 +79,8 @@ public class TestClient {
                     .setPassword(hashRequest.getPassword())
                     .build(), responseObserver);
             logger.info("Password hashing sent!");
-            //TimeUnit.SECONDS.sleep(2);
-        } catch ( StatusRuntimeException ex) {
+            TimeUnit.SECONDS.sleep(2);
+        } catch (StatusRuntimeException | InterruptedException ex) {
             logger.log(Level.WARNING, "RPC failed: {0}", ex.fillInStackTrace());
             return null;
         }

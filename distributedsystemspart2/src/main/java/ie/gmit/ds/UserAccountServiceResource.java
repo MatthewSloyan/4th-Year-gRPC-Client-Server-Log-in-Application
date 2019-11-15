@@ -16,12 +16,17 @@ import ie.gmit.sw.TestClient;
 @Produces(MediaType.APPLICATION_JSON)
 public class UserAccountServiceResource {
 
-    private TestClient passwordClient = new TestClient("127.0.0.1", 40000);
+    private TestClient passwordClient;
     private HashMap<Integer, User> usersMap = new HashMap<>();
 
-    public UserAccountServiceResource() {
+    public UserAccountServiceResource(int port) {
+        passwordClient = new TestClient("127.0.0.1", port);
+
         User testUser = new User(1, "Matthew_S97", "test@gmail.com", "sdfsd", "sdfsd");
         usersMap.put(testUser.getUserId(), testUser);
+
+        User testUser2 = new User(2, "Matthew_S97", "test@gmail.com", "sdfsd", "sdfsd");
+        usersMap.put(testUser2.getUserId(), testUser2);
 
         // {"userId":10, "userName":"Matthew_S97", "email":"test@gmail.com", "hashedPassword":"sdfsd", "salt":"dsfsd"}
     }
@@ -57,7 +62,7 @@ public class UserAccountServiceResource {
     //Update a user
     @PUT
     @Path("/{userId}")
-    public Response alterUser(User user, @PathParam("userId") Integer userId)
+    public Response updateUser(User user, @PathParam("userId") Integer userId)
     {
         try {
             usersMap.replace(userId, user);
@@ -66,6 +71,15 @@ public class UserAccountServiceResource {
         catch (RuntimeException e){
             return Response.status(400).build();
         }
+    }
+
+    //Delete a user
+    @DELETE
+    @Path("/{userId}")
+    public Response deleteUser(User user, @PathParam("userId") Integer userId)
+    {
+        usersMap.remove(userId);
+        return Response.status(200).build();
     }
 
     // Calls asynchronous hashPassword method in Client
