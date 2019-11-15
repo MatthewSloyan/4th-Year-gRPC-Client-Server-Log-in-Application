@@ -10,10 +10,6 @@ import javax.ws.rs.core.Response;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.HashMap;
-import ie.gmit.ds.HashRequest;
-import ie.gmit.ds.HashResponse;
-import ie.gmit.ds.PasswordServiceGrpc;
-import ie.gmit.ds.ValidateRequest;
 import ie.gmit.sw.TestClient;
 
 @Path("/users")
@@ -44,8 +40,11 @@ public class UserAccountServiceResource {
     // Adds a new user
     @POST
     public void addUsers(User user) throws IOException {
-        // Not completed
-        usersMap.put(user.getUserId(), user);
+        // Will need validation
+        String[] hashPasswordSalt = hashPassword(user.getUserId(), user.getPassword());
+        User newUser = new User(user.getUserId(), user.getUserName(), user.getEmail(), hashPasswordSalt[0], hashPasswordSalt[1]);
+
+        usersMap.put(user.getUserId(), newUser);
     }
 
     // Get a specific user
@@ -69,16 +68,15 @@ public class UserAccountServiceResource {
         }
     }
 
-//    private String hashPassword(int userId, String userPassword)
-//    {
-//        //passwordClient.
-//
-//        // Build a hashRequest object
-//        HashRequest hashRequest = HashRequest.newBuilder()
-//                .setUserId(userId)
-//                .setPassword(userPassword)
-//                .build();
-//
-//        return "Test";
-//    }
+    // Calls asynchronous hashPassword method in Client
+    private String[] hashPassword(int userId, String userPassword)
+    {
+        // Build a hashRequest object
+        HashRequest hashRequest = HashRequest.newBuilder()
+                .setUserId(userId)
+                .setPassword(userPassword)
+                .build();
+
+        return passwordClient.hashPassword(hashRequest);
+    }
 }

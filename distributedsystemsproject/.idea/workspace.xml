@@ -3,7 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="72b56a76-1b92-48c8-beb3-a62108d6c090" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/../distributedsystemspart2/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../distributedsystemspart2/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../distributedsystemspart2/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../distributedsystemspart2/pom.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../distributedsystemspart2/src/main/java/ie/gmit/ds/UserAccountServiceResource.java" beforeDir="false" afterPath="$PROJECT_DIR$/../distributedsystemspart2/src/main/java/ie/gmit/ds/UserAccountServiceResource.java" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -37,6 +36,7 @@
     <property name="node.js.path.for.package.tslint" value="project" />
     <property name="node.js.selected.package.eslint" value="(autodetect)" />
     <property name="node.js.selected.package.tslint" value="(autodetect)" />
+    <property name="nodejs_package_manager_path" value="npm" />
   </component>
   <component name="RecentsManager">
     <key name="CreateTestDialog.RecentsKey">
@@ -157,7 +157,7 @@
       <workItem from="1573503356014" duration="4315000" />
       <workItem from="1573589436803" duration="6462000" />
       <workItem from="1573643104767" duration="3308000" />
-      <workItem from="1573829806983" duration="7046000" />
+      <workItem from="1573829806983" duration="9298000" />
     </task>
     <servers />
   </component>

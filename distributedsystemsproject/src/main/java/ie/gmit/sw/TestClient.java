@@ -12,6 +12,7 @@ import io.grpc.Status;
 import io.grpc.StatusRuntimeException;
 import io.grpc.stub.StreamObserver;
 
+import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
@@ -43,8 +44,10 @@ public class TestClient {
         channel.shutdown().awaitTermination(5, TimeUnit.SECONDS);
     }
 
-    public void hashPassword(HashRequest hashRequest) {
+    public String[] hashPassword(HashRequest hashRequest) {
         logger.info("Hashing password");
+
+        String[] hashPasswordSalt = {""};
 
         StreamObserver<HashResponse> responseObserver = new StreamObserver<HashResponse>() {
             @Override
@@ -76,12 +79,16 @@ public class TestClient {
                     .setPassword(hashRequest.getPassword())
                     .build(), responseObserver);
             logger.info("Password hashing sent!");
-            TimeUnit.SECONDS.sleep(2);
-        } catch (
-                StatusRuntimeException | InterruptedException ex) {
+            //TimeUnit.SECONDS.sleep(2);
+        } catch ( StatusRuntimeException ex) {
             logger.log(Level.WARNING, "RPC failed: {0}", ex.fillInStackTrace());
-            return;
+            return null;
         }
+        // Testing
+        hashPasswordSalt[0] = hashedTestPassword.toString();
+        hashPasswordSalt[1] = saltTest.toString();
+
+        return hashPasswordSalt;
     }
 
     public void validatePassword() {

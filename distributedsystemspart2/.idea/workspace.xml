@@ -3,17 +3,9 @@
   <component name="ChangeListManager">
     <list default="true" id="d98bb8ff-bade-48b0-8033-58cd04c9405e" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/ie/gmit/ds/UserAccountServiceResource.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ie/gmit/ds/UserAccountServiceResource.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../distributedsystemsproject/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../distributedsystemsproject/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../distributedsystemsproject/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../distributedsystemsproject/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../distributedsystemsproject/src/main/java/ie/gmit/sw/ExampleHealthCheck.java" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/../distributedsystemsproject/src/main/java/ie/gmit/sw/TestClient.java" beforeDir="false" afterPath="$PROJECT_DIR$/../distributedsystemsproject/src/main/java/ie/gmit/sw/TestClient.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../distributedsystemsproject/src/main/java/ie/gmit/sw/User.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../distributedsystemsproject/src/main/java/ie/gmit/sw/UserAccountServiceApplication.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../distributedsystemsproject/src/main/java/ie/gmit/sw/UserAccountServiceConfig.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../distributedsystemsproject/src/main/java/ie/gmit/sw/UserAccountServiceResource.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../distributedsystemsproject/userAccountServiceConfig.yaml" beforeDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -59,7 +51,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1573831367539</updated>
-      <workItem from="1573831373968" duration="6794000" />
+      <workItem from="1573831373968" duration="8642000" />
     </task>
     <servers />
   </component>
