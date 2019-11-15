@@ -43,7 +43,7 @@ public class TestClient {
         channel.shutdown().awaitTermination(5, TimeUnit.SECONDS);
     }
 
-    private void hashPassword(HashRequest hashRequest) {
+    public void hashPassword(HashRequest hashRequest) {
         logger.info("Hashing password");
 
         StreamObserver<HashResponse> responseObserver = new StreamObserver<HashResponse>() {
@@ -84,7 +84,7 @@ public class TestClient {
         }
     }
 
-    private void validatePassword() {
+    public void validatePassword() {
         logger.info("Validation!");
 
         BoolValue result = BoolValue.newBuilder().setValue(false).build();

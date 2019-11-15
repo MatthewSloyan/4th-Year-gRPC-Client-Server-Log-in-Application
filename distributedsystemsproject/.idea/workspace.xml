@@ -2,9 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="72b56a76-1b92-48c8-beb3-a62108d6c090" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/../distributedsystemspart2/.idea/vcs.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../distributedsystemspart2/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../distributedsystemspart2/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../distributedsystemspart2/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../distributedsystemspart2/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../distributedsystemspart2/src/main/java/ie/gmit/ds/UserAccountServiceResource.java" beforeDir="false" afterPath="$PROJECT_DIR$/../distributedsystemspart2/src/main/java/ie/gmit/ds/UserAccountServiceResource.java" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -157,7 +157,7 @@
       <workItem from="1573503356014" duration="4315000" />
       <workItem from="1573589436803" duration="6462000" />
       <workItem from="1573643104767" duration="3308000" />
-      <workItem from="1573829806983" duration="2723000" />
+      <workItem from="1573829806983" duration="7046000" />
     </task>
     <servers />
   </component>
