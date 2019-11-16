@@ -2,25 +2,23 @@ package ie.gmit.ds;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class User {
+public class UserPost {
 
     private int userId;
     private String userName;
     private String email;
-    private String hashedPassword;
-    private String salt;
+    private String password;
 
-    public User() {
+    public UserPost() {
         // Needed for Jackson deserialisation
     }
 
-    // Used in get requests
-    public User(int userId, String userName, String email, String hashedPassword, String salt) {
+    // Used in post request
+    public UserPost(int userId, String userName, String email, String password) {
         this.userId = userId;
         this.userName = userName;
         this.email = email;
-        this.hashedPassword = hashedPassword;
-        this.salt = salt;
+        this.password = password;
     }
 
     @JsonProperty
@@ -39,12 +37,7 @@ public class User {
     }
 
     @JsonProperty
-    public String getHashedPassword() {
-        return hashedPassword;
-    }
-
-    @JsonProperty
-    public String getSalt() {
-        return salt;
+    public String getPassword() {
+        return password;
     }
 }

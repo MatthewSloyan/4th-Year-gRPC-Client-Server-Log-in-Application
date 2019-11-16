@@ -44,10 +44,11 @@ public class TestClient {
         channel.shutdown().awaitTermination(5, TimeUnit.SECONDS);
     }
 
-    public String[] hashPassword(HashRequest hashRequest) {
+    public ArrayList<String> hashPassword(HashRequest hashRequest) {
         logger.info("Hashing password");
 
-        String[] hashPasswordSalt = {""};
+        //String[] hashPasswordSalt = {""};
+        ArrayList<String> test = new ArrayList<>();
 
         StreamObserver<HashResponse> responseObserver = new StreamObserver<HashResponse>() {
             @Override
@@ -80,15 +81,19 @@ public class TestClient {
                     .build(), responseObserver);
             logger.info("Password hashing sent!");
             TimeUnit.SECONDS.sleep(2);
+
+            // Testing
+            //hashPasswordSalt[0] = hashedTestPassword.toString();
+            //hashPasswordSalt[1] = saltTest.toString();
+            //logger.info("Test" + hashPasswordSalt[1]);
+            test.add(hashedTestPassword.toString());
+            test.add(saltTest.toString());
+
         } catch (StatusRuntimeException | InterruptedException ex) {
             logger.log(Level.WARNING, "RPC failed: {0}", ex.fillInStackTrace());
-            return null;
         }
-        // Testing
-        hashPasswordSalt[0] = hashedTestPassword.toString();
-        hashPasswordSalt[1] = saltTest.toString();
 
-        return hashPasswordSalt;
+        return test;
     }
 
     public void validatePassword() {

@@ -3,7 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="72b56a76-1b92-48c8-beb3-a62108d6c090" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/../distributedsystemspart2/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../distributedsystemspart2/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../distributedsystemspart2/src/main/java/ie/gmit/ds/UserAccountServiceApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/../distributedsystemspart2/src/main/java/ie/gmit/ds/UserAccountServiceApplication.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../distributedsystemspart2/src/main/java/ie/gmit/ds/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/../distributedsystemspart2/src/main/java/ie/gmit/ds/User.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../distributedsystemspart2/src/main/java/ie/gmit/ds/UserAccountServiceResource.java" beforeDir="false" afterPath="$PROJECT_DIR$/../distributedsystemspart2/src/main/java/ie/gmit/ds/UserAccountServiceResource.java" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -31,6 +31,7 @@
     <property name="aspect.path.notification.shown" value="true" />
     <property name="com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrary" value="JUnit4" />
     <property name="com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrarySuperClass.JUnit4" value="" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../distributedsystemspart2" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.detected.package.tslint" value="true" />
     <property name="node.js.path.for.package.eslint" value="project" />
@@ -158,7 +159,8 @@
       <workItem from="1573503356014" duration="4315000" />
       <workItem from="1573589436803" duration="6462000" />
       <workItem from="1573643104767" duration="3308000" />
-      <workItem from="1573829806983" duration="11865000" />
+      <workItem from="1573829806983" duration="12470000" />
+      <workItem from="1573930635822" duration="1722000" />
     </task>
     <servers />
   </component>

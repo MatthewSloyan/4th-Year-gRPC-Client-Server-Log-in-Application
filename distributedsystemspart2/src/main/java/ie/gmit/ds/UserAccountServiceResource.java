@@ -8,12 +8,14 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import ie.gmit.sw.TestClient;
 
 @Path("/users")
 @Produces(MediaType.APPLICATION_JSON)
+@Consumes(MediaType.APPLICATION_JSON)
 public class UserAccountServiceResource {
 
     private TestClient passwordClient;
@@ -44,12 +46,14 @@ public class UserAccountServiceResource {
 
     // Adds a new user
     @POST
-    public void addUsers(User user) throws IOException {
+    public Response addUsers(UserPost userPost) throws IOException {
         // Will need validation
-        String[] hashPasswordSalt = hashPassword(user.getUserId(), user.getPassword());
-        User newUser = new User(user.getUserId(), user.getUserName(), user.getEmail(), hashPasswordSalt[0], hashPasswordSalt[1]);
+        ArrayList<String> hashPasswordSalt = hashPassword(userPost.getUserId(), userPost.getPassword());
+        User newUser = new User(userPost.getUserId(), userPost.getUserName(), userPost.getEmail(), hashPasswordSalt.get(0), hashPasswordSalt.get(1));
 
-        usersMap.put(user.getUserId(), newUser);
+        usersMap.put(userPost.getUserId(), newUser);
+
+        return Response.status(201).build();
     }
 
     // Get a specific user
@@ -69,21 +73,26 @@ public class UserAccountServiceResource {
             return Response.status(200).build();
         }
         catch (RuntimeException e){
-            return Response.status(400).build();
+            return Response.status(400).type(MediaType.TEXT_PLAIN).entity("User not found!").build();
         }
     }
 
     //Delete a user
     @DELETE
     @Path("/{userId}")
-    public Response deleteUser(User user, @PathParam("userId") Integer userId)
+    public Response deleteUser(@PathParam("userId") Integer userId)
     {
-        usersMap.remove(userId);
-        return Response.status(200).build();
+        try {
+            usersMap.remove(userId);
+            return Response.status(200).build();
+        }
+        catch (RuntimeException e){
+            return Response.status(400).type(MediaType.TEXT_PLAIN).entity("User not found!").build();
+        }
     }
 
     // Calls asynchronous hashPassword method in Client
-    private String[] hashPassword(int userId, String userPassword)
+    private ArrayList<String> hashPassword(int userId, String userPassword)
     {
         // Build a hashRequest object
         HashRequest hashRequest = HashRequest.newBuilder()
