@@ -96,31 +96,36 @@ public class TestClient {
         return test;
     }
 
-    public void validatePassword() {
-        logger.info("Validation!");
+    public String validatePassword(String password, String hashedPassword, String salt) {
+        String responseMessage = "";
+
+        ByteString hashedPasswordBs = ByteString.copyFromUtf8(hashedPassword);
+        ByteString saltBs = ByteString.copyFromUtf8(salt);
 
         BoolValue result = BoolValue.newBuilder().setValue(false).build();
-        logger.info(result.toString() + "Test");
 
         try {
             result = syncPasswordService.validate(ValidateRequest.newBuilder()
-                    .setPassword(testPassword)
-                    .setHashedPassword(hashedTestPassword)
-                    .setSalt(saltTest)
+                    .setPassword(password)
+                    .setHashedPassword(hashedPasswordBs)
+                    .setSalt(saltBs)
                     .build());
 
             logger.info(result.toString());
 
             if(result.getValue()){
                 logger.info("Successful match!");
+                responseMessage = "Successful match";
             }
             else {
                 logger.info("Unsuccessful match!");
+                responseMessage = "Unsuccessful match";
             }
         } catch (StatusRuntimeException ex) {
             logger.log(Level.WARNING, "RPC failed: {0}", ex.getStatus());
-            return;
+            responseMessage = "System Error";
         }
+        return responseMessage;
     }
 
     public static void main(String[] args) throws Exception {

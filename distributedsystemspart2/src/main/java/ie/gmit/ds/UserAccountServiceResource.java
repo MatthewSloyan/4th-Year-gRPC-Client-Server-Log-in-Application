@@ -91,6 +91,14 @@ public class UserAccountServiceResource {
         }
     }
 
+    // Adds a new user
+    @POST
+    public Response login(UserLogin userLogin) {
+
+
+        return Response.status(200).build();
+    }
+
     // Calls asynchronous hashPassword method in Client
     private ArrayList<String> hashPassword(int userId, String userPassword)
     {
