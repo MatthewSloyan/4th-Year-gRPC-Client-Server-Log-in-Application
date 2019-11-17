@@ -30,7 +30,7 @@
     <property name="aspect.path.notification.shown" value="true" />
     <property name="com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrary" value="JUnit4" />
     <property name="com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrarySuperClass.JUnit4" value="" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../distributedsystemspart2" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.detected.package.tslint" value="true" />
     <property name="node.js.path.for.package.eslint" value="project" />
@@ -160,6 +160,8 @@
       <workItem from="1573643104767" duration="3308000" />
       <workItem from="1573829806983" duration="12470000" />
       <workItem from="1573930635822" duration="3152000" />
+      <workItem from="1573994324417" duration="623000" />
+      <workItem from="1573994958383" duration="1719000" />
     </task>
     <servers />
   </component>

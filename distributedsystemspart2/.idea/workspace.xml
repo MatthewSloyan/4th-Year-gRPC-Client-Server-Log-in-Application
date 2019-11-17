@@ -29,7 +29,7 @@
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../distributedsystemsproject" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.detected.package.tslint" value="true" />
     <property name="node.js.path.for.package.eslint" value="project" />
@@ -61,6 +61,7 @@
       <updated>1573831367539</updated>
       <workItem from="1573831373968" duration="12500000" />
       <workItem from="1573930738993" duration="6369000" />
+      <workItem from="1573994195514" duration="2478000" />
     </task>
     <servers />
   </component>

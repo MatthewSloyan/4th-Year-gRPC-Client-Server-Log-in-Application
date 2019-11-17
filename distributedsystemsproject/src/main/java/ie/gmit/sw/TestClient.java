@@ -12,6 +12,7 @@ import io.grpc.Status;
 import io.grpc.StatusRuntimeException;
 import io.grpc.stub.StreamObserver;
 
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
@@ -47,7 +48,6 @@ public class TestClient {
     public ArrayList<String> hashPassword(HashRequest hashRequest) {
         logger.info("Hashing password");
 
-        //String[] hashPasswordSalt = {""};
         ArrayList<String> test = new ArrayList<>();
 
         StreamObserver<HashResponse> responseObserver = new StreamObserver<HashResponse>() {
@@ -82,14 +82,11 @@ public class TestClient {
             logger.info("Password hashing sent!");
             TimeUnit.SECONDS.sleep(2);
 
-            // Testing
-            //hashPasswordSalt[0] = hashedTestPassword.toString();
-            //hashPasswordSalt[1] = saltTest.toString();
-            //logger.info("Test" + hashPasswordSalt[1]);
-            test.add(hashedTestPassword.toString());
-            test.add(saltTest.toString());
+            // Code adapted from: https://stackoverflow.com/questions/54924619/convert-com-google-protobuf-bytestring-to-string
+            test.add(hashedTestPassword.toString("UTF-8"));
+            test.add(saltTest.toString("UTF-8"));
 
-        } catch (StatusRuntimeException | InterruptedException ex) {
+        } catch (StatusRuntimeException | InterruptedException | UnsupportedEncodingException ex) {
             logger.log(Level.WARNING, "RPC failed: {0}", ex.fillInStackTrace());
         }
 

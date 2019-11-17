@@ -15,7 +15,6 @@ import ie.gmit.sw.TestClient;
 
 @Path("/users")
 @Produces(MediaType.APPLICATION_JSON)
-@Consumes(MediaType.APPLICATION_JSON)
 public class UserAccountServiceResource {
 
     private TestClient passwordClient;
@@ -46,7 +45,7 @@ public class UserAccountServiceResource {
 
     // Adds a new user
     @POST
-    public Response addUsers(UserPost userPost) throws IOException {
+    public Response addUsers(UserPost userPost){
         // Will need validation
         ArrayList<String> hashPasswordSalt = hashPassword(userPost.getUserId(), userPost.getPassword());
         User newUser = new User(userPost.getUserId(), userPost.getUserName(), userPost.getEmail(), hashPasswordSalt.get(0), hashPasswordSalt.get(1));
@@ -91,12 +90,28 @@ public class UserAccountServiceResource {
         }
     }
 
-    // Adds a new user
+    // Validates a users login
     @POST
+    @Path("/login")
     public Response login(UserLogin userLogin) {
+        String responseMessage;
 
+        // First check if user exists
+        responseMessage = passwordClient.validatePassword(userLogin.getPassword(),
+                usersMap.get(userLogin.getUserId()).getHashedPassword(),
+                usersMap.get(userLogin.getUserId()).getSalt());
 
-        return Response.status(200).build();
+        System.out.println(responseMessage);
+
+        if (responseMessage == "Successful match"){
+            return Response.status(200).type(MediaType.TEXT_PLAIN).entity("Validation Successful.").build();
+        }
+        else if (responseMessage == "Unsuccessful match"){
+            return Response.status(200).type(MediaType.TEXT_PLAIN).entity("User ID or password incorrect.").build();
+        }
+        else {
+            return Response.status(400).type(MediaType.TEXT_PLAIN).entity("System Error!").build();
+        }
     }
 
     // Calls asynchronous hashPassword method in Client
