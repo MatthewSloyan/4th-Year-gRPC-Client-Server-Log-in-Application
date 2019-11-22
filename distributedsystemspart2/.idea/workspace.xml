@@ -3,11 +3,12 @@
   <component name="ChangeListManager">
     <list default="true" id="d98bb8ff-bade-48b0-8033-58cd04c9405e" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ie/gmit/ds/Client.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ie/gmit/ds/Client.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ie/gmit/ds/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ie/gmit/ds/User.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ie/gmit/ds/UserAccountServiceApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ie/gmit/ds/UserAccountServiceApplication.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/ie/gmit/ds/UserAccountServiceResource.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ie/gmit/ds/UserAccountServiceResource.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ie/gmit/ds/UserLogin.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ie/gmit/ds/UserLogin.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ie/gmit/ds/UserPost.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ie/gmit/ds/UserPost.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../distributedsystemsproject/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../distributedsystemsproject/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../distributedsystemsproject/src/main/java/ie/gmit/sw/TestClient.java" beforeDir="false" afterPath="$PROJECT_DIR$/../distributedsystemsproject/src/main/java/ie/gmit/sw/TestClient.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../distributedsystemsproject/src/main/java/ie/gmit/sw/TestClient.java" beforeDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -65,7 +66,7 @@
       <workItem from="1573930738993" duration="6369000" />
       <workItem from="1573994195514" duration="2478000" />
       <workItem from="1574248163810" duration="16384000" />
-      <workItem from="1574446475309" duration="1519000" />
+      <workItem from="1574446475309" duration="7848000" />
     </task>
     <servers />
   </component>

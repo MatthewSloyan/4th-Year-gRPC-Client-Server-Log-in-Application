@@ -3,9 +3,10 @@
   <component name="ChangeListManager">
     <list default="true" id="72b56a76-1b92-48c8-beb3-a62108d6c090" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/../distributedsystemspart2/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../distributedsystemspart2/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../distributedsystemspart2/src/main/java/ie/gmit/ds/Client.java" beforeDir="false" afterPath="$PROJECT_DIR$/../distributedsystemspart2/src/main/java/ie/gmit/ds/Client.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../distributedsystemspart2/src/main/java/ie/gmit/ds/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/../distributedsystemspart2/src/main/java/ie/gmit/ds/User.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../distributedsystemspart2/src/main/java/ie/gmit/ds/UserAccountServiceApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/../distributedsystemspart2/src/main/java/ie/gmit/ds/UserAccountServiceApplication.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../distributedsystemspart2/src/main/java/ie/gmit/ds/UserAccountServiceResource.java" beforeDir="false" afterPath="$PROJECT_DIR$/../distributedsystemspart2/src/main/java/ie/gmit/ds/UserAccountServiceResource.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../distributedsystemspart2/src/main/java/ie/gmit/ds/UserLogin.java" beforeDir="false" afterPath="$PROJECT_DIR$/../distributedsystemspart2/src/main/java/ie/gmit/ds/UserLogin.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../distributedsystemspart2/src/main/java/ie/gmit/ds/UserPost.java" beforeDir="false" afterPath="$PROJECT_DIR$/../distributedsystemspart2/src/main/java/ie/gmit/ds/UserPost.java" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -166,7 +167,7 @@
       <workItem from="1573994958383" duration="1719000" />
       <workItem from="1574248100003" duration="13022000" />
       <workItem from="1574353767804" duration="624000" />
-      <workItem from="1574446419691" duration="669000" />
+      <workItem from="1574446419691" duration="2859000" />
     </task>
     <servers />
   </component>

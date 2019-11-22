@@ -11,7 +11,7 @@ public class UserAccountServiceApplication extends Application<UserAccountServic
         new UserAccountServiceApplication().run(args);
     }
 
-    public void run(UserAccountServiceConfig userAccountServiceConfig, Environment environment) throws Exception {
+    public void run(UserAccountServiceConfig userAccountServiceConfig, Environment environment) {
 
         Scanner console = new Scanner(System.in);
         String port = "";
@@ -40,7 +40,7 @@ public class UserAccountServiceApplication extends Application<UserAccountServic
         final ExampleHealthCheck healthCheck = new ExampleHealthCheck();
         environment.healthChecks().register("example", healthCheck);
 
-        final UserAccountServiceResource resource = new UserAccountServiceResource(Integer.parseInt(port));
+        final UserAccountServiceResource resource = new UserAccountServiceResource(Integer.parseInt(port), environment.getValidator());
 
         environment.jersey().register(resource);
     }

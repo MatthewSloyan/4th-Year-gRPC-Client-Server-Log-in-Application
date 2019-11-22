@@ -2,8 +2,11 @@ package ie.gmit.ds;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import javax.validation.constraints.NotNull;
+
 public class User {
 
+    @NotNull
     private int userId;
     private String userName;
     private String email;
