@@ -1,35 +1,28 @@
 package ie.gmit.ds;
 
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.*;
-import javax.ws.rs.client.Client;
-import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.io.IOException;
-import java.util.ArrayList;
+import java.io.UnsupportedEncodingException;
 import java.util.Collection;
 import java.util.HashMap;
-import ie.gmit.sw.TestClient;
 
 @Path("/users")
 @Produces(MediaType.APPLICATION_JSON)
 public class UserAccountServiceResource {
 
-    private TestClient passwordClient;
+    private Client passwordClient;
     private HashMap<Integer, User> usersMap = new HashMap<>();
 
-    public UserAccountServiceResource(int port) {
-        passwordClient = new TestClient("127.0.0.1", port);
+    public UserAccountServiceResource(int port) throws InterruptedException, UnsupportedEncodingException{
+        passwordClient = new Client("127.0.0.1", port);
 
-        User testUser = new User(1, "Matthew_S97", "test@gmail.com", "sdfsd", "sdfsd");
-        usersMap.put(testUser.getUserId(), testUser);
+        hashPassword(1, "test");
 
-        User testUser2 = new User(2, "Matthew_S97", "test@gmail.com", "sdfsd", "sdfsd");
-        usersMap.put(testUser2.getUserId(), testUser2);
+        User testUser = new User(1, "Matthew_S97", "test@gmail.com",
+                passwordClient.getHashedPassword(), passwordClient.getSalt());
 
-        // {"userId":10, "userName":"Matthew_S97", "email":"test@gmail.com", "hashedPassword":"sdfsd", "salt":"dsfsd"}
+        usersMap.put(1, testUser);
     }
 
     // Get all users
@@ -46,9 +39,11 @@ public class UserAccountServiceResource {
     // Adds a new user
     @POST
     public Response addUsers(UserPost userPost){
-        // Will need validation
-        ArrayList<String> hashPasswordSalt = hashPassword(userPost.getUserId(), userPost.getPassword());
-        User newUser = new User(userPost.getUserId(), userPost.getUserName(), userPost.getEmail(), hashPasswordSalt.get(0), hashPasswordSalt.get(1));
+
+        hashPassword(userPost.getUserId(), userPost.getPassword());
+
+        User newUser = new User(userPost.getUserId(), userPost.getUserName(), userPost.getEmail(),
+                passwordClient.getHashedPassword(), passwordClient.getSalt());
 
         usersMap.put(userPost.getUserId(), newUser);
 
@@ -67,11 +62,11 @@ public class UserAccountServiceResource {
     @Path("/{userId}")
     public Response updateUser(User user, @PathParam("userId") Integer userId)
     {
-        try {
+        if(usersMap.containsKey(userId)){
             usersMap.replace(userId, user);
             return Response.status(200).build();
         }
-        catch (RuntimeException e){
+        else {
             return Response.status(400).type(MediaType.TEXT_PLAIN).entity("User not found!").build();
         }
     }
@@ -81,11 +76,11 @@ public class UserAccountServiceResource {
     @Path("/{userId}")
     public Response deleteUser(@PathParam("userId") Integer userId)
     {
-        try {
+        if(usersMap.containsKey(userId)){
             usersMap.remove(userId);
             return Response.status(200).build();
         }
-        catch (RuntimeException e){
+        else {
             return Response.status(400).type(MediaType.TEXT_PLAIN).entity("User not found!").build();
         }
     }
@@ -93,29 +88,32 @@ public class UserAccountServiceResource {
     // Validates a users login
     @POST
     @Path("/login")
-    public Response login(UserLogin userLogin) {
+    public Response login(UserLogin userLogin) throws UnsupportedEncodingException {
         String responseMessage;
 
-        // First check if user exists
-        responseMessage = passwordClient.validatePassword(userLogin.getPassword(),
-                usersMap.get(userLogin.getUserId()).getHashedPassword(),
-                usersMap.get(userLogin.getUserId()).getSalt());
+        if(usersMap.containsKey(userLogin.getUserId())){
+            // First check if user exists
+            responseMessage = passwordClient.validatePassword(userLogin.getPassword(),
+                    usersMap.get(userLogin.getUserId()).getHashedPassword(),
+                    usersMap.get(userLogin.getUserId()).getSalt());
 
-        System.out.println(responseMessage);
-
-        if (responseMessage == "Successful match"){
-            return Response.status(200).type(MediaType.TEXT_PLAIN).entity("Validation Successful.").build();
-        }
-        else if (responseMessage == "Unsuccessful match"){
-            return Response.status(200).type(MediaType.TEXT_PLAIN).entity("User ID or password incorrect.").build();
+            if (responseMessage == "Successful match"){
+                return Response.status(200).type(MediaType.TEXT_PLAIN).entity("Validation Successful.").build();
+            }
+            else if (responseMessage == "Unsuccessful match"){
+                return Response.status(400).type(MediaType.TEXT_PLAIN).entity("User ID or password incorrect.").build();
+            }
+            else {
+                return Response.status(400).type(MediaType.TEXT_PLAIN).entity("System Error!").build();
+            }
         }
         else {
-            return Response.status(400).type(MediaType.TEXT_PLAIN).entity("System Error!").build();
+            return Response.status(400).type(MediaType.TEXT_PLAIN).entity("User ID or password incorrect.").build();
         }
     }
 
     // Calls asynchronous hashPassword method in Client
-    private ArrayList<String> hashPassword(int userId, String userPassword)
+    private void hashPassword(int userId, String userPassword)
     {
         // Build a hashRequest object
         HashRequest hashRequest = HashRequest.newBuilder()
@@ -123,6 +121,6 @@ public class UserAccountServiceResource {
                 .setPassword(userPassword)
                 .build();
 
-        return passwordClient.hashPassword(hashRequest);
+        passwordClient.hashPassword(hashRequest);
     }
 }

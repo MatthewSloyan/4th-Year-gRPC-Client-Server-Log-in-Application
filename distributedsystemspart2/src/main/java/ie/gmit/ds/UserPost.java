@@ -1,12 +1,19 @@
 package ie.gmit.ds;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.hibernate.validator.constraints.NotBlank;
+
+import javax.validation.constraints.NotNull;
 
 public class UserPost {
 
+    @NotNull
     private int userId;
+    @NotBlank
     private String userName;
+    @NotBlank
     private String email;
+    @NotBlank
     private String password;
 
     public UserPost() {

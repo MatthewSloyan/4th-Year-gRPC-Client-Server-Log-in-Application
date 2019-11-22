@@ -48,7 +48,7 @@ public class TestClient {
     public ArrayList<String> hashPassword(HashRequest hashRequest) {
         logger.info("Hashing password");
 
-        ArrayList<String> test = new ArrayList<>();
+        ArrayList<String> passwordSalt = new ArrayList<>();
 
         StreamObserver<HashResponse> responseObserver = new StreamObserver<HashResponse>() {
             @Override
@@ -80,24 +80,38 @@ public class TestClient {
                     .setPassword(hashRequest.getPassword())
                     .build(), responseObserver);
             logger.info("Password hashing sent!");
-            TimeUnit.SECONDS.sleep(2);
+            TimeUnit.SECONDS.sleep(5);
 
             // Code adapted from: https://stackoverflow.com/questions/54924619/convert-com-google-protobuf-bytestring-to-string
-            test.add(hashedTestPassword.toString("UTF-8"));
-            test.add(saltTest.toString("UTF-8"));
+            byte[] bp = hashedTestPassword.toByteArray();
+            String sp = new String(bp);
 
-        } catch (StatusRuntimeException | InterruptedException | UnsupportedEncodingException ex) {
+            byte[] bs = saltTest.toByteArray();
+            String ss = new String(bs);
+            logger.info("Test4" + sp);
+            logger.info("Test5" + ss);
+
+            passwordSalt.add(sp);
+            passwordSalt.add(ss);
+
+        } catch (StatusRuntimeException | InterruptedException ex) {
             logger.log(Level.WARNING, "RPC failed: {0}", ex.fillInStackTrace());
         }
 
-        return test;
+        return passwordSalt;
     }
 
-    public String validatePassword(String password, String hashedPassword, String salt) {
+    public String validatePassword(String password, String hashedPassword, String salt) throws UnsupportedEncodingException {
         String responseMessage = "";
 
-        ByteString hashedPasswordBs = ByteString.copyFromUtf8(hashedPassword);
-        ByteString saltBs = ByteString.copyFromUtf8(salt);
+        logger.info(hashedPassword);
+        logger.info(salt);
+
+        byte[] bp = hashedPassword.getBytes();
+        ByteString hashedPasswordBs = ByteString.copyFrom(bp);
+
+        byte[] bs = salt.getBytes();
+        ByteString saltBs = ByteString.copyFrom(bs);
 
         BoolValue result = BoolValue.newBuilder().setValue(false).build();
 
