@@ -11,7 +11,8 @@ import java.util.HashMap;
 import java.util.Set;
 
 @Path("/users")
-@Produces(MediaType.APPLICATION_JSON)
+@Consumes({ "application/json", "application/xml" })
+@Produces({ "application/json", "application/xml" })
 public class UserAccountServiceResource {
 
     private Client passwordClient;
@@ -65,13 +66,13 @@ public class UserAccountServiceResource {
      * @return Response - Returns a HTTP response depending if successful or not.
      */
     @POST
-    public Response addUsers(UserPost userPost){
+    public Response addUser(UserPost userPost){
 
         // Validates if posted user contains all values, so if the email is not present it will return an error.
         // Code adapted from: https://www.programcreek.com/java-api-examples/javax.validation.ConstraintViolation
         Set<ConstraintViolation<UserPost>> violations = validator.validate(userPost);
 
-        if(violations.isEmpty()){
+        if(violations.isEmpty() && !usersMap.containsKey(userPost.getUserId())){
             // Call the hashPassword method which calls the asynchronous hashPassword method in Client
             this.hashPassword(userPost.getUserId(), userPost.getPassword());
 

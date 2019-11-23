@@ -6,8 +6,11 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="distributedsystemspart2" />
+        <module name="distributed-systems-part-2" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="distributedsystemspart2" target="8" />
+    </bytecodeTargetLevel>
   </component>
 </project>

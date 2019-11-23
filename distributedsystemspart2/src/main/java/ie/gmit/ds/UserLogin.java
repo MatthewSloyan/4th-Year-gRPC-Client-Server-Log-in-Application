@@ -4,7 +4,11 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import org.hibernate.validator.constraints.NotBlank;
 
 import javax.validation.constraints.NotNull;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
 
+@XmlRootElement(name= "userLogin")
 public class UserLogin {
 
     @NotNull
@@ -14,6 +18,7 @@ public class UserLogin {
 
     public UserLogin() {
         // Needed for Jackson deserialisation
+        super();
     }
 
     public UserLogin(int userId, String password) {
@@ -21,13 +26,24 @@ public class UserLogin {
         this.password = password;
     }
 
+    @XmlElement
     @JsonProperty
     public int getUserId() {
         return userId;
     }
 
+    @XmlElement
     @JsonProperty
     public String getPassword() {
         return password;
+    }
+
+    // Setters needed for xml binding
+    public void setUserId(int userId) {
+        this.userId = userId;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 }
