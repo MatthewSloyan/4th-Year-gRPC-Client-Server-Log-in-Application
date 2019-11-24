@@ -21,6 +21,7 @@ public class UserAccountServiceResource {
 
     public UserAccountServiceResource(int port, Validator validator){
         // Initialise the resource with an instance of the client, this will be used to access it's methods.
+        // Set up validator to check if post requests are valid.
         passwordClient = new Client("127.0.0.1", port);
         this.validator = validator;
 
@@ -28,9 +29,14 @@ public class UserAccountServiceResource {
         // Call the hashPassword method which calls the asynchronous hashPassword method in Client.
         // Then get the hashed password and salt from the client.
         this.hashPassword(1, "test");
-        User testUser = new User(1, "Test_User", "test@gmail.com",
-                passwordClient.getHashedPassword(), passwordClient.getSalt());
-        usersMap.put(1, testUser);
+
+        if (passwordClient.getHashedPassword() != null || passwordClient.getSalt() != null){
+            User testUser = new User(1, "Test_User", "test@gmail.com",
+                    passwordClient.getHashedPassword(), passwordClient.getSalt());
+            usersMap.put(1, testUser);
+
+            passwordClient.setNull();
+        }
     }
 
     /**
@@ -72,21 +78,24 @@ public class UserAccountServiceResource {
         // Code adapted from: https://www.programcreek.com/java-api-examples/javax.validation.ConstraintViolation
         Set<ConstraintViolation<UserPost>> violations = validator.validate(userPost);
 
-        if(violations.isEmpty() && !usersMap.containsKey(userPost.getUserId())){
-            // Call the hashPassword method which calls the asynchronous hashPassword method in Client
-            this.hashPassword(userPost.getUserId(), userPost.getPassword());
-
-            // Create a new user and get the hashed password and salt from the client.
-            User newUser = new User(userPost.getUserId(), userPost.getUserName(), userPost.getEmail(),
-                    passwordClient.getHashedPassword(), passwordClient.getSalt());
-
-            usersMap.put(userPost.getUserId(), newUser);
-
-            return Response.status(201).type(MediaType.TEXT_PLAIN).entity("User successfully added!").build();
-        }
-        else {
+        // Check if there is violations or if user already exists
+        if(!violations.isEmpty() || usersMap.containsKey(userPost.getUserId())){
             return Response.status(400).type(MediaType.TEXT_PLAIN).entity("User invalid!").build();
         }
+
+        // Call the hashPassword method which calls the asynchronous hashPassword method in Client
+        this.hashPassword(userPost.getUserId(), userPost.getPassword());
+
+        // Check if there's any errors on the server side in hashing the password
+        if (passwordClient.getHashedPassword() == null || passwordClient.getSalt() == null){
+            return Response.status(500).type(MediaType.TEXT_PLAIN).entity("The Server cannot be reached.").build();
+        }
+
+        // If all successful create a new user with hashed password and salt
+        addUpdateUser(userPost);
+        passwordClient.setNull();
+
+        return Response.status(201).type(MediaType.TEXT_PLAIN).entity("User successfully added!").build();
     }
 
     /**
@@ -104,23 +113,24 @@ public class UserAccountServiceResource {
         // Code adapted from: https://www.programcreek.com/java-api-examples/javax.validation.ConstraintViolation
         Set<ConstraintViolation<UserPost>> violations = validator.validate(user);
 
-        if(usersMap.containsKey(userId) && violations.isEmpty()){
-            usersMap.remove(userId);
-
-            // Call the hashPassword method which calls the asynchronous hashPassword method in Client
-            this.hashPassword(user.getUserId(), user.getPassword());
-
-            // Create a new updated user and get the hashed password and salt from the client.
-            User updatedUser = new User(user.getUserId(), user.getUserName(), user.getEmail(),
-                    passwordClient.getHashedPassword(), passwordClient.getSalt());
-
-            usersMap.put(user.getUserId(), updatedUser);
-
-            return Response.status(200).type(MediaType.TEXT_PLAIN).entity("User " + userId + " successfully updated!").build();
-        }
-        else {
+        // Check if there is violations or if user doesn't exist
+        if(!violations.isEmpty() || !usersMap.containsKey(userId)){
             return Response.status(400).type(MediaType.TEXT_PLAIN).entity("User " + userId + " invalid or not found!").build();
         }
+
+        // Call the hashPassword method which calls the asynchronous hashPassword method in Client
+        this.hashPassword(user.getUserId(), user.getPassword());
+
+        if (passwordClient.getHashedPassword() == null || passwordClient.getSalt() == null){
+            return Response.status(500).type(MediaType.TEXT_PLAIN).entity("The Server cannot be reached.").build();
+        }
+
+        // If all successful remove and create a new user with updated user details, hashed password and salt.
+        usersMap.remove(userId);
+        addUpdateUser(user);
+        passwordClient.setNull();
+
+        return Response.status(200).type(MediaType.TEXT_PLAIN).entity("User " + userId + " successfully updated!").build();
     }
 
     /**
@@ -153,8 +163,12 @@ public class UserAccountServiceResource {
     public Response login(UserLogin userLogin) throws UnsupportedEncodingException {
         String responseMessage;
 
+        // Validates if posted user contains all values, so if the email is not present it will return an error.
+        // Code adapted from: https://www.programcreek.com/java-api-examples/javax.validation.ConstraintViolation
+        Set<ConstraintViolation<UserLogin>> violations = validator.validate(userLogin);
+
         // Check if the user exists, if not then no point trying to validate with password.
-        if(usersMap.containsKey(userLogin.getUserId())){
+        if(usersMap.containsKey(userLogin.getUserId()) && violations.isEmpty()){
 
             // Call the synchronous validate method in Client and return response message
             responseMessage = passwordClient.validatePassword(userLogin.getPassword(),
@@ -168,12 +182,22 @@ public class UserAccountServiceResource {
                 return Response.status(400).type(MediaType.TEXT_PLAIN).entity("User ID or password incorrect.").build();
             }
             else {
-                return Response.status(400).type(MediaType.TEXT_PLAIN).entity("Server Error!").build();
+                return Response.status(500).type(MediaType.TEXT_PLAIN).entity("The Server cannot be reached.").build();
             }
         }
         else {
             return Response.status(400).type(MediaType.TEXT_PLAIN).entity("User ID or password incorrect.").build();
         }
+    }
+
+    /**
+     * Creates new User object and adds user to Map. Used in post and put requests
+     */
+    private void addUpdateUser(UserPost userPost) {
+        User newUser = new User(userPost.getUserId(), userPost.getUserName(), userPost.getEmail(),
+                passwordClient.getHashedPassword(), passwordClient.getSalt());
+
+        usersMap.put(userPost.getUserId(), newUser);
     }
 
     /**

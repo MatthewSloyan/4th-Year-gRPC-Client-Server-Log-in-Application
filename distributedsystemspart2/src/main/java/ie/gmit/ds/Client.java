@@ -35,6 +35,11 @@ public class Client {
         return salt;
     }
 
+    public void setNull() {
+        this.hashedPassword = null;
+        this.salt = null;
+    }
+
     // Constructor to sent up asynchronous and synchronous PasswordServiceGrpc methods.
     public Client(String host, int port) {
         channel = ManagedChannelBuilder
